@@ -5,282 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AMEERI SERVICES - Job Card</title>
 <style>
-/* ---------- General Styles ---------- */
-body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#f5f7fb; }
-.job-card { width: 800px; margin:0 auto; background:white; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.1); overflow:hidden; }
-.company-header { background:#1a3a8f; color:white; padding:20px; text-align:center; border-bottom:3px solid #ff0000; }
-.company-name { font-size:24px; font-weight:bold; margin-bottom:5px; }
-.company-name-ar { font-size:18px; opacity:0.9; }
-.card-title { background:#2c5fbd; color:white; padding:15px; text-align:center; font-size:20px; font-weight:bold; }
-.form-section { padding:25px; }
-.form-row { display:flex; margin-bottom:15px; gap:20px; }
-.form-group { flex:1; }
-label { display:block; margin-bottom:5px; font-weight:bold; color:#333; }
-input, select { width:100%; padding:8px; border:1px solid #ddd; border-radius:4px; font-size:14px; }
-.parts-table { width:100%; border-collapse: collapse; margin:20px 0; }
-.parts-table th { background:#f8f9fa; border:1px solid #ddd; padding:10px; text-align:left; font-weight:bold; }
-.parts-table td { border:1px solid #ddd; padding:8px; }
-.parts-table input { border:1px solid #ddd; width:100%; padding:5px; box-sizing:border-box; }
-.totals-section { background:#f8f9fa; padding:20px; border-radius:8px; margin:20px 0; }
-.total-row { display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px; }
-.signature-section { margin-top:30px; padding-top:20px; border-top:2px dashed #ccc; }
-.signature-row { display:flex; gap:20px; }
-.signature-box { flex:1; text-align:center; }
-.signature-line { border-bottom:1px solid #000; height:40px; margin:10px 0; }
-.btn { background:#1a3a8f; color:white; padding:12px 30px; border:none; border-radius:5px; cursor:pointer; font-size:16px; margin:10px 5px; }
-.btn-small { padding:5px 10px; font-size:12px; background:#dc3545; }
-.logo-container { text-align:center; margin-bottom:20px; }
-.status-message { padding:15px; border-radius:6px; margin:20px 0; text-align:center; font-weight:bold; display:none; }
-.status-success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
-.status-error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
-
-/* ---------- Print Styles ---------- */
-@media print {
-    body { background:white !important; padding:0 !important; margin:0 !important; }
-    .job-card { width:100% !important; margin:0 !important; box-shadow:none !important; border-radius:0 !important; border:none !important; }
-    .no-print { display:none !important; }
-    .company-header, .card-title { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    @page { margin:0.5cm; size:auto; }
-    body::before, body::after { display:none !important; }
-}
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f7fb; }
+    .job-card { width: 800px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
+    .company-header { background: #1a3a8f; color: white; padding: 20px; text-align: center; border-bottom: 3px solid #ff0000; }
+    .company-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+    .company-name-ar { font-size: 18px; opacity: 0.9; }
+    .card-title { background: #2c5fbd; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+    .form-section { padding: 25px; }
+    .form-row { display: flex; margin-bottom: 15px; gap: 20px; }
+    .form-group { flex: 1; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+    input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background: #f8f9fa; font-weight: bold; }
+    .btn { background: #1a3a8f; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px 5px; }
+    .totals-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
 </style>
 </head>
 <body>
 <div class="job-card">
     <div class="company-header">
-        <div class="logo-container">
-            <img src="ameeriserviceswhitelogo.png" alt="Ameeri Services Logo" style="max-height:80px; display:block; margin:0 auto;">
-        </div>
         <div class="company-name">AMEERI SERVICES CO. W.L.L</div>
         <div class="company-name-ar">شركة أميري للخدمات ذ.م.م</div>
     </div>
+
     <div class="card-title">GARAGE - JOB CARD</div>
-    <div id="statusMessage" class="status-message"></div>
 
     <div class="form-section">
-        <form id="jobCardForm">
-            <!-- Date & Work Order -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="date">DATE</label>
-                    <input type="date" id="date" required>
-                </div>
-                <div class="form-group">
-                    <label for="workOrderNo">WORK ORDER NO</label>
-                    <input type="text" id="workOrderNo" required value="2839">
-                </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date">DATE</label>
+                <input type="date" id="date">
             </div>
-
-            <!-- Company & Driver -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="companyName">COMPANY NAME</label>
-                    <input type="text" id="companyName" value="Ameeri Services">
-                </div>
-                <div class="form-group">
-                    <label for="userName">NAME OF USER/DRIVER</label>
-                    <input type="text" id="userName" value="NyxN">
-                </div>
+            <div class="form-group">
+                <label for="workOrderNo">WORK ORDER NO</label>
+                <input type="text" id="workOrderNo" value="2839">
             </div>
+        </div>
 
-            <!-- Vehicle Info -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="vehicleNo">VEHICLE NO</label>
-                    <input type="text" id="vehicleNo" value="609712">
-                </div>
-                <div class="form-group">
-                    <label for="mileage">MILEAGE</label>
-                    <input type="text" id="mileage" value="158550km">
-                </div>
-                <div class="form-group">
-                    <label for="year">YEAR</label>
-                    <input type="text" id="year" value="2017">
-                </div>
-                <div class="form-group">
-                    <label for="make">MAKE</label>
-                    <input type="text" id="make" value="TOYOTA">
-                </div>
-                <div class="form-group">
-                    <label for="model">MODEL</label>
-                    <input type="text" id="model" value="COPOLUT">
-                </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="companyName">COMPANY NAME</label>
+                <input type="text" id="companyName" value="Ameeri Services">
             </div>
-
-            <!-- Parts Table -->
-            <table class="parts-table">
-                <thead>
-                    <tr>
-                        <th>PARTS/ITEM</th>
-                        <th>QTY</th>
-                        <th>PRICE</th>
-                        <th>SERVICE PERFORMED</th>
-                        <th class="no-print">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody id="partsBody">
-                    <tr>
-                        <td><input type="text" value="Tyezi 195/65 R15"></td>
-                        <td><input type="number" value="2" min="1" id="qty1"></td>
-                        <td><input type="number" value="30.800" step="0.001" id="price1"></td>
-                        <td><input type="text" value="Tyezi 195/65 R15"></td>
-                        <td class="no-print">
-                            <button type="button" class="btn btn-small" id="remove1">Remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="btn no-print" id="addBtn">+ Add Part/Service</button>
-
-            <!-- Totals -->
-            <div class="totals-section">
-                <div class="total-row">
-                    <span>TOTAL PARTS:</span>
-                    <span id="totalParts">61.600 BD</span>
-                </div>
-                <div class="total-row">
-                    <span>TOTAL LABOUR:</span>
-                    <span><input type="number" id="labour" value="5.000" step="0.001" style="width:100px; display:inline;"> BD</span>
-                </div>
-                <div class="total-row" style="font-size:18px; font-weight:bold;">
-                    <span>TOTAL PARTS & LABOUR:</span>
-                    <span id="grandTotal">66.600 BD</span>
-                </div>
+            <div class="form-group">
+                <label for="userName">NAME OF USER/DRIVER</label>
+                <input type="text" id="userName" value="NyxN">
             </div>
+        </div>
 
-            <!-- Signatures -->
-            <div class="signature-section">
-                <div class="signature-row" style="margin-bottom:30px;">
-                    <div class="signature-box">
-                        <label>VEHICLE MAINTENANCE MANAGER</label>
-                        <div class="signature-line" id="maintenanceManagerSign"></div>
-                        <div style="font-size:12px;color:#666;margin-top:5px;" id="maintenanceManagerStatus">[Pending]</div>
-                    </div>
-                </div>
-                <div class="signature-row">
-                    <div class="signature-box">
-                        <label>MECHANIC SIGNATURE</label>
-                        <div class="signature-line" id="mechanicSign"></div>
-                        <div style="font-size:12px;color:#666;margin-top:5px;" id="mechanicStatus">[Pending]</div>
-                    </div>
-                    <div class="signature-box">
-                        <label>USER/DRIVER</label>
-                        <div class="signature-line" id="driverSign"></div>
-                        <div style="font-size:12px;color:#666;margin-top:5px;" id="driverStatus">[Pending]</div>
-                    </div>
-                    <div class="signature-box">
-                        <label>APPROVED BY</label>
-                        <div class="signature-line" id="managerSign"></div>
-                        <div style="font-size:12px;color:#666;margin-top:5px;" id="managerStatus">[Pending]</div>
-                    </div>
-                </div>
-            </div>
+        <div class="form-row">
+            <div class="form-group"><label>VEHICLE NO</label><input type="text" id="vehicleNo" value="609712"></div>
+            <div class="form-group"><label>MILEAGE</label><input type="text" id="mileage" value="158550km"></div>
+            <div class="form-group"><label>YEAR</label><input type="text" id="year" value="2017"></div>
+            <div class="form-group"><label>MAKE</label><input type="text" id="make" value="TOYOTA"></div>
+            <div class="form-group"><label>MODEL</label><input type="text" id="model" value="COPOLUT"></div>
+        </div>
 
-            <!-- Action Buttons -->
-            <div style="text-align:center; margin-top:30px;" class="no-print">
-                <button type="button" class="btn" id="saveBtn">Save Job Card</button>
-                <button type="button" class="btn" id="printBtn">Print Job Card</button>
-            </div>
+        <table id="partsTable">
+            <thead>
+                <tr>
+                    <th>PARTS/ITEM</th>
+                    <th>QTY</th>
+                    <th>PRICE</th>
+                    <th>SERVICE PERFORMED</th>
+                </tr>
+            </thead>
+            <tbody id="partsBody">
+                <tr>
+                    <td><input type="text" value="Tyezi 195/65 R15"></td>
+                    <td><input type="number" value="2" min="1" class="qty"></td>
+                    <td><input type="number" value="30.800" step="0.001" class="price"></td>
+                    <td><input type="text" value="Tyezi 195/65 R15"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn" onclick="addRow()">+ Add Part/Service</button>
 
-            <!-- Hidden signature data -->
-            <input type="hidden" id="mechanicSignatureData" name="mechanicSignatureData" value="">
-            <input type="hidden" id="driverSignatureData" name="driverSignatureData" value="">
-            <input type="hidden" id="maintenanceManagerSignatureData" name="maintenanceManagerSignatureData" value="">
-            <input type="hidden" id="managerSignatureData" name="managerSignatureData" value="">
-        </form>
+        <div class="totals-section">
+            <div class="total-row">TOTAL PARTS: <span id="totalParts">0</span></div>
+            <div class="total-row">LABOUR: <input type="number" id="labour" value="5.000" step="0.001" style="width:100px;"> BD</div>
+            <div class="total-row" style="font-weight:bold;">GRAND TOTAL: <span id="grandTotal">0</span> BD</div>
+        </div>
+
+        <div style="text-align:center;">
+            <button class="btn" onclick="submitForm()">Submit to Form</button>
+        </div>
     </div>
 </div>
 
 <script>
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzivEvEaQDQfMzAVxA-eEHxkwc-wjqh2xGEtLntrhHgoD5hBy-u54RSm8-v87UiBaYYlg/exec"; // Replace with your Google Apps Script Web App URL
-
 document.getElementById('date').valueAsDate = new Date();
 
-// Totals calculation
+function addRow() {
+    const tbody = document.getElementById('partsBody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td><input type="text" placeholder="Part/Item"></td>
+        <td><input type="number" value="1" min="1" class="qty"></td>
+        <td><input type="number" value="0" step="0.001" class="price"></td>
+        <td><input type="text" placeholder="Service Performed"></td>
+    `;
+    tbody.appendChild(newRow);
+    calculateTotals();
+    newRow.querySelectorAll('input').forEach(inp => inp.addEventListener('input', calculateTotals));
+}
+
 function calculateTotals() {
     let partsTotal = 0;
     document.querySelectorAll('#partsBody tr').forEach(row => {
-        const qty = parseFloat(row.querySelector('td:nth-child(2) input')?.value) || 0;
-        const price = parseFloat(row.querySelector('td:nth-child(3) input')?.value) || 0;
+        const qty = parseFloat(row.querySelector('.qty').value) || 0;
+        const price = parseFloat(row.querySelector('.price').value) || 0;
         partsTotal += qty * price;
     });
-    const labour = parseFloat(document.getElementById('labour')?.value) || 0;
-    document.getElementById('totalParts').textContent = partsTotal.toFixed(3) + ' BD';
-    document.getElementById('grandTotal').textContent = (partsTotal + labour).toFixed(3) + ' BD';
+    document.getElementById('totalParts').textContent = partsTotal.toFixed(3);
+    const labour = parseFloat(document.getElementById('labour').value) || 0;
+    document.getElementById('grandTotal').textContent = (partsTotal + labour).toFixed(3);
 }
 
-function getPartsData() {
-    const parts = [];
-    document.querySelectorAll('#partsBody tr').forEach(row => {
-        const part = row.querySelector('td:nth-child(1) input')?.value || '';
-        const qty = row.querySelector('td:nth-child(2) input')?.value || '1';
-        const price = row.querySelector('td:nth-child(3) input')?.value || '0';
-        const service = row.querySelector('td:nth-child(4) input')?.value || '';
-        if(part || service) parts.push({part, qty, price, service});
-    });
-    return parts;
-}
-
-// Add/Remove parts
-document.getElementById('addBtn').addEventListener('click', ()=>{
-    const tbody = document.getElementById('partsBody');
-    const rowCount = tbody.children.length + 1;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input type="text" placeholder="Part/Item"></td>
-    <td><input type="number" value="1" min="1"></td>
-    <td><input type="number" value="0" step="0.001"></td>
-    <td><input type="text" placeholder="Service Performed"></td>
-    <td class="no-print"><button type="button" class="btn btn-small">Remove</button></td>`;
-    tbody.appendChild(tr);
-    calculateTotals();
-});
-
-document.getElementById('partsBody').addEventListener('click', e=>{
-    if(e.target.matches('.btn-small')) e.target.closest('tr').remove();
-    calculateTotals();
-});
-
+document.querySelectorAll('.qty, .price').forEach(el => el.addEventListener('input', calculateTotals));
 document.getElementById('labour').addEventListener('input', calculateTotals);
 
-// Print
-document.getElementById('printBtn').addEventListener('click', ()=>window.print());
-
-// Save to Google Sheet
-document.getElementById('saveBtn').addEventListener('click', async ()=>{
+function submitForm() {
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfpFwE9-8ftffzVrXwTy2ndKRaaFjEflu68KljWXFzxfx3kcw/formResponse";
     const data = {
-        date: document.getElementById('date').value,
-        workOrderNo: document.getElementById('workOrderNo').value,
-        companyName: document.getElementById('companyName').value,
-        userName: document.getElementById('userName').value,
-        vehicleNo: document.getElementById('vehicleNo').value,
-        mileage: document.getElementById('mileage').value,
-        year: document.getElementById('year').value,
-        make: document.getElementById('make').value,
-        model: document.getElementById('model').value,
-        parts: JSON.stringify(getPartsData()),
-        totalParts: document.getElementById('totalParts').textContent.replace(' BD',''),
-        totalLabour: document.getElementById('labour').value,
-        grandTotal: document.getElementById('grandTotal').textContent.replace(' BD',''),
-        mechanicSignatureData: document.getElementById('mechanicSignatureData').value,
-        driverSignatureData: document.getElementById('driverSignatureData').value,
-        maintenanceManagerSignatureData: document.getElementById('maintenanceManagerSignatureData').value,
-        managerSignatureData: document.getElementById('managerSignatureData').value
+        "entry.2005620554": document.getElementById('date').value,
+        "entry.1045781291": document.getElementById('workOrderNo').value,
+        "entry.1166974658": document.getElementById('vehicleNo').value,
+        "entry.839337160": document.getElementById('companyName').value,
+        "entry.857183122": document.getElementById('userName').value,
+        "entry.1582091966": document.getElementById('mileage').value,
+        "entry.2109876543": document.getElementById('year').value,
+        "entry.1234567890": document.getElementById('make').value,
+        "entry.9876543210": document.getElementById('model').value,
+        "entry.1111111111": Array.from(document.querySelectorAll('#partsBody tr')).map(r=>{
+            const cells=r.querySelectorAll('input');
+            return cells[0].value+" x"+cells[1].value+" @"+cells[2].value+" ("+cells[3].value+")";
+        }).join(", "),
+        "entry.2222222222": document.getElementById('totalParts').textContent,
+        "entry.3333333333": document.getElementById('labour').value,
+        "entry.4444444444": document.getElementById('grandTotal').textContent
     };
 
-    try {
-        const res = await fetch(SHEET_URL, {
-            method:'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        alert(result.message || 'Saved successfully!');
-    } catch(err){
-        alert('Error saving: '+err.message);
-    }
-});
-
-calculateTotals();
+    const params = new URLSearchParams(data).toString();
+    window.open(formUrl + "?" + params, "_blank");
+}
 </script>
 </body>
 </html>

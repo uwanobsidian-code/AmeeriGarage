@@ -1,157 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMEERI SERVICES - Job Card</title>
-<style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f7fb; }
-    .job-card { width: 800px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
-    .company-header { background: #1a3a8f; color: white; padding: 20px; text-align: center; border-bottom: 3px solid #ff0000; }
-    .company-name { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
-    .company-name-ar { font-size: 18px; opacity: 0.9; }
-    .card-title { background: #2c5fbd; color: white; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
-    .form-section { padding: 25px; }
-    .form-row { display: flex; margin-bottom: 15px; gap: 20px; }
-    .form-group { flex: 1; }
-    label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-    input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
-    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    th { background: #f8f9fa; font-weight: bold; }
-    .btn { background: #1a3a8f; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin: 10px 5px; }
-    .totals-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
-    .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 16px; }
-</style>
-</head>
-<body>
-<div class="job-card">
-    <div class="company-header">
-        <div class="company-name">AMEERI SERVICES CO. W.L.L</div>
-        <div class="company-name-ar">شركة أميري للخدمات ذ.م.م</div>
-    </div>
+function doPost(e) {
+  try {
+    // Parse the JSON data from the request
+    const data = JSON.parse(e.postData.contents);
 
-    <div class="card-title">GARAGE - JOB CARD</div>
+    // Get the spreadsheet
+    const SPREADSHEET_ID = '1YvM5vvlWT4Pp5GIGhVZwScihX_74hrDE1_0e2ou9MvQ';
+    const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = spreadsheet.getSheets()[0];
 
-    <div class="form-section">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="date">DATE</label>
-                <input type="date" id="date">
-            </div>
-            <div class="form-group">
-                <label for="workOrderNo">WORK ORDER NO</label>
-                <input type="text" id="workOrderNo" value="2839">
-            </div>
-        </div>
+    // Parse the parts data from the form
+    let partsData = [];
+    try {
+      partsData = JSON.parse(data.partsData || '[]');
+    } catch (error) {
+      partsData = [];
+    }
 
-        <div class="form-row">
-            <div class="form-group">
-                <label for="companyName">COMPANY NAME</label>
-                <input type="text" id="companyName" value="Ameeri Services">
-            </div>
-            <div class="form-group">
-                <label for="userName">NAME OF USER/DRIVER</label>
-                <input type="text" id="userName" value="NyxN">
-            </div>
-        </div>
+    let savedRows = 0;
 
-        <div class="form-row">
-            <div class="form-group"><label>VEHICLE NO</label><input type="text" id="vehicleNo" value="609712"></div>
-            <div class="form-group"><label>MILEAGE</label><input type="text" id="mileage" value="158550km"></div>
-            <div class="form-group"><label>YEAR</label><input type="text" id="year" value="2017"></div>
-            <div class="form-group"><label>MAKE</label><input type="text" id="make" value="TOYOTA"></div>
-            <div class="form-group"><label>MODEL</label><input type="text" id="model" value="COPOLUT"></div>
-        </div>
+    if (partsData.length > 0) {
+      partsData.forEach((part, index) => {
+        const rowData = [
+          data.date || '',
+          data.workOrderNo || '',
+          data.vehicleNo || '',
+          data.mileage || '',
+          data.year || '',
+          data.make || '',
+          data.model || '',
+          data.companyName || '',
+          data.userName || '',
+          '', // Payment (empty)
+          part.partName || '',
+          part.qty || '',
+          part.price || '',
+          part.service || '',
+          (parseFloat(part.qty || 0) * parseFloat(part.price || 0)).toFixed(3),
+          index === 0 ? data.totalLabour : '',
+          index === 0 ? data.grandTotal : '',
+          data.mechanicSignatureData ? 'Yes' : 'No',
+          data.driverSignatureData ? 'Yes' : 'No',
+          data.managerSignatureData ? 'Yes' : 'No',
+          data.maintenanceManagerSignatureData ? 'Yes' : 'No',
+          'Completed',
+          new Date()
+        ];
+        sheet.appendRow(rowData);
+        savedRows++;
+      });
+    } else {
+      const rowData = [
+        data.date || '',
+        data.workOrderNo || '',
+        data.vehicleNo || '',
+        data.mileage || '',
+        data.year || '',
+        data.make || '',
+        data.model || '',
+        data.companyName || '',
+        data.userName || '',
+        '', // Payment (empty)
+        '', // Part Name (empty)
+        '', // Part Quantity (empty)
+        '', // Part Price (empty)
+        '', // Service Performed (empty)
+        data.totalParts || '',
+        data.totalLabour || '',
+        data.grandTotal || '',
+        data.mechanicSignatureData ? 'Yes' : 'No',
+        data.driverSignatureData ? 'Yes' : 'No',
+        data.managerSignatureData ? 'Yes' : 'No',
+        data.maintenanceManagerSignatureData ? 'Yes' : 'No',
+        'Completed',
+        new Date()
+      ];
+      sheet.appendRow(rowData);
+      savedRows++;
+    }
 
-        <table id="partsTable">
-            <thead>
-                <tr>
-                    <th>PARTS/ITEM</th>
-                    <th>QTY</th>
-                    <th>PRICE</th>
-                    <th>SERVICE PERFORMED</th>
-                </tr>
-            </thead>
-            <tbody id="partsBody">
-                <tr>
-                    <td><input type="text" value="Tyezi 195/65 R15"></td>
-                    <td><input type="number" value="2" min="1" class="qty"></td>
-                    <td><input type="number" value="30.800" step="0.001" class="price"></td>
-                    <td><input type="text" value="Tyezi 195/65 R15"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="btn" onclick="addRow()">+ Add Part/Service</button>
+    // Return success with CORS headers
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true,
+      message: `Job Card saved successfully! ${savedRows} row(s) added.`,
+      rowsSaved: savedRows
+    }))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        <div class="totals-section">
-            <div class="total-row">TOTAL PARTS: <span id="totalParts">0</span></div>
-            <div class="total-row">LABOUR: <input type="number" id="labour" value="5.000" step="0.001" style="width:100px;"> BD</div>
-            <div class="total-row" style="font-weight:bold;">GRAND TOTAL: <span id="grandTotal">0</span> BD</div>
-        </div>
-
-        <div style="text-align:center;">
-            <button class="btn" onclick="submitForm()">Submit to Form</button>
-        </div>
-    </div>
-</div>
-
-<script>
-document.getElementById('date').valueAsDate = new Date();
-
-function addRow() {
-    const tbody = document.getElementById('partsBody');
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-        <td><input type="text" placeholder="Part/Item"></td>
-        <td><input type="number" value="1" min="1" class="qty"></td>
-        <td><input type="number" value="0" step="0.001" class="price"></td>
-        <td><input type="text" placeholder="Service Performed"></td>
-    `;
-    tbody.appendChild(newRow);
-    calculateTotals();
-    newRow.querySelectorAll('input').forEach(inp => inp.addEventListener('input', calculateTotals));
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.toString(),
+      message: 'Failed to save job card'
+    }))
+    .setMimeType(ContentService.MimeType.JSON)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
 }
 
-function calculateTotals() {
-    let partsTotal = 0;
-    document.querySelectorAll('#partsBody tr').forEach(row => {
-        const qty = parseFloat(row.querySelector('.qty').value) || 0;
-        const price = parseFloat(row.querySelector('.price').value) || 0;
-        partsTotal += qty * price;
-    });
-    document.getElementById('totalParts').textContent = partsTotal.toFixed(3);
-    const labour = parseFloat(document.getElementById('labour').value) || 0;
-    document.getElementById('grandTotal').textContent = (partsTotal + labour).toFixed(3);
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({
+    message: 'Ameeri Services Job Card API is running!',
+    status: 'active'
+  }))
+  .setMimeType(ContentService.MimeType.JSON)
+  .setHeader('Access-Control-Allow-Origin', '*')
+  .setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+  .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
-document.querySelectorAll('.qty, .price').forEach(el => el.addEventListener('input', calculateTotals));
-document.getElementById('labour').addEventListener('input', calculateTotals);
-
-function submitForm() {
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfpFwE9-8ftffzVrXwTy2ndKRaaFjEflu68KljWXFzxfx3kcw/formResponse";
-    const data = {
-        "entry.2005620554": document.getElementById('date').value,
-        "entry.1045781291": document.getElementById('workOrderNo').value,
-        "entry.1166974658": document.getElementById('vehicleNo').value,
-        "entry.839337160": document.getElementById('companyName').value,
-        "entry.857183122": document.getElementById('userName').value,
-        "entry.1582091966": document.getElementById('mileage').value,
-        "entry.2109876543": document.getElementById('year').value,
-        "entry.1234567890": document.getElementById('make').value,
-        "entry.9876543210": document.getElementById('model').value,
-        "entry.1111111111": Array.from(document.querySelectorAll('#partsBody tr')).map(r=>{
-            const cells=r.querySelectorAll('input');
-            return cells[0].value+" x"+cells[1].value+" @"+cells[2].value+" ("+cells[3].value+")";
-        }).join(", "),
-        "entry.2222222222": document.getElementById('totalParts').textContent,
-        "entry.3333333333": document.getElementById('labour').value,
-        "entry.4444444444": document.getElementById('grandTotal').textContent
-    };
-
-    const params = new URLSearchParams(data).toString();
-    window.open(formUrl + "?" + params, "_blank");
+// Handle preflight OPTIONS requests
+function doOptions(e) {
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT)
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
-</script>
-</body>
-</html>

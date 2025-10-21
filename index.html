@@ -486,47 +486,50 @@
     };
     
     try {
-        console.log('Sending data to Google Sheets...');
-        
-        // Send to Google Sheets
-        const response = await fetch('https://script.google.com/macros/s/AKfycbz_VaSuK0ZL7PgEp0bWZ86UdxO1o7g7jhkwlB74FBQSjgDyg4M0obMOZKyo9Y7b2riw5w/exec', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(jobCardData)
-        });
-        
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const text = await response.text();
-        console.log('Response text:', text);
-        
-        let result;
-        try {
-            result = JSON.parse(text);
-        } catch (parseError) {
-            console.error('JSON parse error:', parseError);
-            throw new Error(`Invalid JSON response: ${text}`);
-        }
-        
-        if (result.success) {
-            alert('✅ Job Card Saved to Google Sheets!');
-            // Optional: Reset form
-            document.getElementById('jobCardForm').reset();
-            document.getElementById('date').valueAsDate = new Date();
-        } else {
-            alert('❌ Error: ' + (result.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Full error:', error);
-        alert('❌ Network error: ' + error.message + '\n\nCheck the browser console for more details.');
+    console.log('Sending data to Google Sheets...');
+    
+    // Use CORS proxy for GitHub Pages
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbz_VaSuK0ZL7PgEp0bWZ86UdxO1o7g7jhkwlB74FBQSjgDyg4M0obMOZKyo9Y7b2riw5w/exec';
+    const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(scriptUrl);
+    
+    // Send to Google Sheets through CORS proxy
+    const response = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobCardData)
+    });
+    
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
-});
+    
+    const text = await response.text();
+    console.log('Response text:', text);
+    
+    let result;
+    try {
+        result = JSON.parse(text);
+    } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        throw new Error(`Invalid JSON response: ${text}`);
+    }
+    
+    if (result.success) {
+        alert('✅ Job Card Saved to Google Sheets!');
+        // Optional: Reset form
+        document.getElementById('jobCardForm').reset();
+        document.getElementById('date').valueAsDate = new Date();
+    } else {
+        alert('❌ Error: ' + (result.error || 'Unknown error'));
+    }
+} catch (error) {
+    console.error('Full error:', error);
+    alert('❌ Network error: ' + error.message + '\n\nCheck the browser console for more details.');
+}
 
             // Delegation: handle input changes inside partsBody and remove button clicks
             if (partsBody) {

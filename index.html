@@ -486,30 +486,41 @@
                 };
                 
                 try {
-                    // Send to Google Sheets - USING YOUR LATEST DEPLOYMENT ID
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbz3Hr9phIG7P6fXEyn_Qij4i5P3QvWIYWN1i7SRBLY1OSBgv6bBH7rEpsnTV1amTz3JGw/exec', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(jobCardData)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        alert('✅ Job Card Saved to Google Sheets!');
-                        // Optional: Reset form
-                        document.getElementById('jobCardForm').reset();
-                        document.getElementById('date').valueAsDate = new Date();
-                    } else {
-                        alert('❌ Error: ' + result.error);
-                    }
-                } catch (error) {
-                    alert('❌ Network error: ' + error.message);
-                }
-            });
-
+    // Send to Google Sheets
+    const response = await fetch('https://script.google.com/macros/s/AKfycbz3Hr9phIG7P6fXEyn_Qij4i5P3QvWIYWN1i7SRBLY1OSBgv6bBH7rEpsnTV1amTz3JGw/exec', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobCardData)
+    });
+    
+    // Check if response is ok
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    let result;
+    
+    try {
+        result = JSON.parse(text);
+    } catch (parseError) {
+        throw new Error(`Invalid JSON response: ${text}`);
+    }
+    
+    if (result.success) {
+        alert('✅ Job Card Saved to Google Sheets!');
+        // Optional: Reset form
+        document.getElementById('jobCardForm').reset();
+        document.getElementById('date').valueAsDate = new Date();
+    } else {
+        alert('❌ Error: ' + (result.error || 'Unknown error'));
+    }
+} catch (error) {
+    console.error('Full error:', error);
+    alert('❌ Network error: ' + error.message);
+}
             // Delegation: handle input changes inside partsBody and remove button clicks
             if (partsBody) {
                 partsBody.addEventListener('input', function(e) {

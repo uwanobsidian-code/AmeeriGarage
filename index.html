@@ -491,15 +491,24 @@
     // Use CORS proxy for GitHub Pages
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbz_VaSuK0ZL7PgEp0bWZ86UdxO1o7g7jhkwlB74FBQSjgDyg4M0obMOZKyo9Y7b2riw5w/exec';
     const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(scriptUrl);
+    try {
+    console.log('Sending data to Google Sheets...');
     
-    // Send to Google Sheets through CORS proxy
-    const response = await fetch(proxyUrl, {
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbz_VaSuK0ZL7PgEp0bWZ86UdxO1o7g7jhkwlB74FBQSjgDyg4M0obMOZKyo9Y7b2riw5w/exec';
+    
+    // Try different CORS proxy
+    const response = await fetch(`https://api.codetabs.com/v1/proxy?quest=${scriptUrl}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(jobCardData)
     });
+    
+    // ... rest of the code same as above
+} catch (error) {
+    // ... error handling
+}
     
     console.log('Response status:', response.status);
     

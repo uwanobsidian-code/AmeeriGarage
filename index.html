@@ -466,13 +466,14 @@
                 
                 try {
                     // Send to Google Sheets - USING YOUR NEW DEPLOYMENT ID
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbyWWjBOd5lCguORuQo40mUAnTE5toEvbTx2M7AesqZxYba5I81BY4eng1hR4pD6--4I/exec', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(jobCardData)
-                    });
+                   const response = await fetch('https://script.google.com/macros/s/AKfycbyWWjBOd5lCguORuQo40mUAnTE5toEvbTx2M7AesqZxYba5I81BY4eng1hR4pD6--4I/exec', {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(jobCardData)
+});
                     
                     const result = await response.json();
                     

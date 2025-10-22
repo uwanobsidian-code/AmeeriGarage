@@ -487,29 +487,13 @@
                 
                 try {
                     // Send to Google Sheets - USING YOUR LATEST DEPLOYMENT ID
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbxqAOUtaXo66M4_DTJkdltqHN36mv7QezVE4dbniMFD/exec', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(jobCardData)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.success) {
-                        alert('✅ Job Card Saved to Google Sheets!');
-                        // Optional: Reset form
-                        document.getElementById('jobCardForm').reset();
-                        document.getElementById('date').valueAsDate = new Date();
-                    } else {
-                        alert('❌ Error: ' + result.error);
-                    }
-                } catch (error) {
-                    alert('❌ Network error: ' + error.message);
-                }
-            });
-
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbyrGpDSh-IIqeC0zaVQQiC-guXMPL9ghw4P04-h018d8IsqNex2XT6TEPafRXMWvT7zkQ/exec', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(jobCardData)
+});
             // Delegation: handle input changes inside partsBody and remove button clicks
             if (partsBody) {
                 partsBody.addEventListener('input', function(e) {

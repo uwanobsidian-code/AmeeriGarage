@@ -5,20 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMEERI SERVICES - Job Card</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
             background: #f5f7fb;
+            min-height: 100vh;
         }
+        
         .job-card {
-            width: 800px;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             overflow: hidden;
         }
+        
         .company-header {
             background: #1a3a8f;
             color: white;
@@ -26,15 +36,18 @@
             text-align: center;
             border-bottom: 3px solid #ff0000;
         }
+        
         .company-name {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 5px;
         }
+        
         .company-name-ar {
             font-size: 18px;
             opacity: 0.9;
         }
+        
         .card-title {
             background: #2c5fbd;
             color: white;
@@ -43,23 +56,30 @@
             font-size: 20px;
             font-weight: bold;
         }
+        
         .form-section {
             padding: 25px;
         }
+        
         .form-row {
             display: flex;
+            flex-wrap: wrap;
             margin-bottom: 15px;
             gap: 20px;
         }
+        
         .form-group {
             flex: 1;
+            min-width: 200px;
         }
+        
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #333;
         }
+        
         input, select {
             width: 100%;
             padding: 8px;
@@ -67,11 +87,13 @@
             border-radius: 4px;
             font-size: 14px;
         }
+        
         .parts-table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
+        
         .parts-table th {
             background: #f8f9fa;
             border: 1px solid #ddd;
@@ -79,46 +101,57 @@
             text-align: left;
             font-weight: bold;
         }
+        
         .parts-table td {
             border: 1px solid #ddd;
             padding: 8px;
         }
+        
         .parts-table input {
             border: 1px solid #ddd;
             width: 100%;
             padding: 5px;
             box-sizing: border-box;
         }
+        
         .totals-section {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
         }
+        
         .total-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             font-size: 16px;
         }
+        
         .signature-section {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 2px dashed #ccc;
         }
+        
         .signature-row {
             display: flex;
+            flex-wrap: wrap;
             gap: 20px;
         }
+        
         .signature-box {
             flex: 1;
+            min-width: 150px;
             text-align: center;
         }
+        
         .signature-line {
             border-bottom: 1px solid #000;
             height: 40px;
             margin: 10px 0;
         }
+        
         .btn {
             background: #1a3a8f;
             color: white;
@@ -128,100 +161,21 @@
             cursor: pointer;
             font-size: 16px;
             margin: 10px 5px;
+            transition: background 0.3s;
         }
+        
+        .btn:hover {
+            background: #2c5fbd;
+        }
+        
         .btn-small {
             padding: 5px 10px;
             font-size: 12px;
             background: #dc3545;
         }
-        .logo-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* PRINT STYLES - FIXED */
-        @media print {
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            .job-card {
-                width: 100% !important;
-                margin: 0 !important;
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                border: none !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .company-header {
-                background: #1a3a8f !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .card-title {
-                background: #2c5fbd !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            
-            /* Remove browser print headers and footers */
-            @page {
-                margin: 0.5cm;
-                size: auto;
-            }
-            
-            /* Hide URL and date/time in print */
-            body::before, body::after {
-                display: none !important;
-            }
-        }
-        .company-header img {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-        }
-
-        /* Signature Links Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 500px;
-            max-width: 90%;
-        }
-        .signature-link {
-            background: #f8f9fa;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border-left: 4px solid #1a3a8f;
-        }
-        .copy-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 3px;
-            cursor: pointer;
-            margin-left: 10px;
+        
+        .btn-small:hover {
+            background: #c82333;
         }
 
         /* Status Messages */
@@ -233,15 +187,86 @@
             font-weight: bold;
             display: none;
         }
+        
         .status-success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+        
         .status-error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .signature-link {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #1a3a8f;
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .job-card, .job-card * {
+                visibility: visible;
+            }
+            .job-card {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            .form-group {
+                min-width: 100%;
+            }
+            .signature-row {
+                flex-direction: column;
+            }
+            .signature-box {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -249,10 +274,6 @@
     <div class="job-card">
         <!-- Company Header -->
         <div class="company-header">
-            <div class="logo-container">
-                <!-- Logo removed for GitHub Pages compatibility -->
-                <div style="height: 60px;"></div>
-            </div>
             <div class="company-name">AMEERI SERVICES CO. W.L.L</div>
             <div class="company-name-ar">شركة أميري للخدمات ذ.م.م</div>
         </div>
@@ -265,141 +286,139 @@
 
         <!-- Job Card Form -->
         <div class="form-section">
-            <form id="jobCardForm">
-                <!-- Date and Work Order -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="date">DATE</label>
-                        <input type="date" id="date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="workOrderNo">WORK ORDER NO</label>
-                        <input type="text" id="workOrderNo" required value="2839">
+            <!-- Date and Work Order -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">DATE</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="workOrderNo">WORK ORDER NO</label>
+                    <input type="text" id="workOrderNo" required value="2839">
+                </div>
+            </div>
+
+            <!-- Company and Driver -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="companyName">COMPANY NAME</label>
+                    <input type="text" id="companyName" value="Ameeri Services">
+                </div>
+                <div class="form-group">
+                    <label for="userName">NAME OF USER/DRIVER</label>
+                    <input type="text" id="userName" value="NyxN">
+                </div>
+            </div>
+
+            <!-- Vehicle Information -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vehicleNo">VEHICLE NO</label>
+                    <input type="text" id="vehicleNo" value="609712">
+                </div>
+                <div class="form-group">
+                    <label for="mileage">MILEAGE</label>
+                    <input type="text" id="mileage" value="158550km">
+                </div>
+                <div class="form-group">
+                    <label for="year">YEAR</label>
+                    <input type="text" id="year" value="2017">
+                </div>
+                <div class="form-group">
+                    <label for="make">MAKE</label>
+                    <input type="text" id="make" value="TOYOTA">
+                </div>
+                <div class="form-group">
+                    <label for="model">MODEL</label>
+                    <input type="text" id="model" value="COPOLUT">
+                </div>
+            </div>
+
+            <!-- Parts Table -->
+            <table class="parts-table">
+                <thead>
+                    <tr>
+                        <th>PARTS/ITEM</th>
+                        <th>QTY</th>
+                        <th>PRICE</th>
+                        <th>SERVICE PERFORMED</th>
+                        <th class="no-print">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody id="partsBody">
+                    <tr>
+                        <td><input type="text" value="Tyezi 195/65 R15"></td>
+                        <td><input type="number" value="2" min="1"></td>
+                        <td><input type="number" value="30.800" step="0.001"></td>
+                        <td><input type="text" value="Tyezi 195/65 R15"></td>
+                        <td class="no-print">
+                            <button type="button" class="btn btn-small">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <button type="button" class="btn no-print" id="addBtn">+ Add Part/Service</button>
+
+            <!-- Totals Section -->
+            <div class="totals-section">
+                <div class="total-row">
+                    <span>TOTAL PARTS:</span>
+                    <span id="totalParts">61.600 BD</span>
+                </div>
+                <div class="total-row">
+                    <span>TOTAL LABOUR:</span>
+                    <span><input type="number" id="labour" value="5.000" step="0.001" style="width: 100px; display: inline;"> BD</span>
+                </div>
+                <div class="total-row" style="font-size: 18px; font-weight: bold;">
+                    <span>TOTAL PARTS & LABOUR:</span>
+                    <span id="grandTotal">66.600 BD</span>
+                </div>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="signature-section">
+                <!-- Vehicle Maintenance Manager on Top -->
+                <div class="signature-row" style="margin-bottom: 30px;">
+                    <div class="signature-box">
+                        <label>VEHICLE MAINTENANCE MANAGER</label>
+                        <div class="signature-line" id="maintenanceManagerSign"></div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;" id="maintenanceManagerStatus">[Pending]</div>
                     </div>
                 </div>
 
-                <!-- Company and Driver -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="companyName">COMPANY NAME</label>
-                        <input type="text" id="companyName" value="Ameeri Services">
+                <!-- Other Three Signatures at Bottom -->
+                <div class="signature-row">
+                    <div class="signature-box">
+                        <label>MECHANIC SIGNATURE</label>
+                        <div class="signature-line" id="mechanicSign"></div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;" id="mechanicStatus">[Pending]</div>
                     </div>
-                    <div class="form-group">
-                        <label for="userName">NAME OF USER/DRIVER</label>
-                        <input type="text" id="userName" value="NyxN">
+                    <div class="signature-box">
+                        <label>USER/DRIVER</label>
+                        <div class="signature-line" id="driverSign"></div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;" id="driverStatus">[Pending]</div>
                     </div>
-                </div>
-
-                <!-- Vehicle Information -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="vehicleNo">VEHICLE NO</label>
-                        <input type="text" id="vehicleNo" value="609712">
-                    </div>
-                    <div class="form-group">
-                        <label for="mileage">MILEAGE</label>
-                        <input type="text" id="mileage" value="158550km">
-                    </div>
-                    <div class="form-group">
-                        <label for="year">YEAR</label>
-                        <input type="text" id="year" value="2017">
-                    </div>
-                    <div class="form-group">
-                        <label for="make">MAKE</label>
-                        <input type="text" id="make" value="TOYOTA">
-                    </div>
-                    <div class="form-group">
-                        <label for="model">MODEL</label>
-                        <input type="text" id="model" value="COPOLUT">
+                    <div class="signature-box">
+                        <label>APPROVED BY</label>
+                        <div class="signature-line" id="managerSign"></div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;" id="managerStatus">[Pending]</div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Parts Table -->
-                <table class="parts-table">
-                    <thead>
-                        <tr>
-                            <th>PARTS/ITEM</th>
-                            <th>QTY</th>
-                            <th>PRICE</th>
-                            <th>SERVICE PERFORMED</th>
-                            <th class="no-print">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody id="partsBody">
-                        <tr>
-                            <td><input type="text" value="Tyezi 195/65 R15"></td>
-                            <td><input type="number" value="2" min="1" id="qty1"></td>
-                            <td><input type="number" value="30.800" step="0.001" id="price1"></td>
-                            <td><input type="text" value="Tyezi 195/65 R15"></td>
-                            <td class="no-print">
-                                <button type="button" class="btn btn-small" id="remove1">Remove</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Action Buttons -->
+            <div style="text-align: center; margin-top: 30px;" class="no-print">
+                <button type="button" class="btn" id="saveBtn">Save Job Card</button>
+                <button type="button" class="btn" id="printBtn">Print Job Card</button>
+                <button type="button" class="btn" id="signatureBtn">Attach Signatures</button>
+            </div>
 
-                <button type="button" class="btn no-print" id="addBtn">+ Add Part/Service</button>
-
-                <!-- Totals Section -->
-                <div class="totals-section">
-                    <div class="total-row">
-                        <span>TOTAL PARTS:</span>
-                        <span id="totalParts">61.600 BD</span>
-                    </div>
-                    <div class="total-row">
-                        <span>TOTAL LABOUR:</span>
-                        <span><input type="number" id="labour" value="5.000" step="0.001" style="width: 100px; display: inline;"> BD</span>
-                    </div>
-                    <div class="total-row" style="font-size: 18px; font-weight: bold;">
-                        <span>TOTAL PARTS & LABOUR:</span>
-                        <span id="grandTotal">66.600 BD</span>
-                    </div>
-                </div>
-
-                <!-- Signature Section -->
-                <div class="signature-section">
-                    <!-- Vehicle Maintenance Manager on Top -->
-                    <div class="signature-row" style="margin-bottom: 30px;">
-                        <div class="signature-box">
-                            <label>VEHICLE MAINTENANCE MANAGER</label>
-                            <div class="signature-line" id="maintenanceManagerSign"></div>
-                            <div style="font-size: 12px; color: #666; margin-top: 5px;" id="maintenanceManagerStatus">[Pending]</div>
-                        </div>
-                    </div>
-
-                    <!-- Other Three Signatures at Bottom -->
-                    <div class="signature-row">
-                        <div class="signature-box">
-                            <label>MECHANIC SIGNATURE</label>
-                            <div class="signature-line" id="mechanicSign"></div>
-                            <div style="font-size: 12px; color: #666; margin-top: 5px;" id="mechanicStatus">[Pending]</div>
-                        </div>
-                        <div class="signature-box">
-                            <label>USER/DRIVER</label>
-                            <div class="signature-line" id="driverSign"></div>
-                            <div style="font-size: 12px; color: #666; margin-top: 5px;" id="driverStatus">[Pending]</div>
-                        </div>
-                        <div class="signature-box">
-                            <label>APPROVED BY</label>
-                            <div class="signature-line" id="managerSign"></div>
-                            <div style="font-size: 12px; color: #666; margin-top: 5px;" id="managerStatus">[Pending]</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div style="text-align: center; margin-top: 30px;" class="no-print">
-                    <button type="button" class="btn" id="saveBtn">Save Job Card</button>
-                    <button type="button" class="btn" id="printBtn">Print Job Card</button>
-                    <button type="button" class="btn" id="signatureBtn">Attach Signatures</button>
-                </div>
-
-                <!-- Hidden fields to keep attached signature data -->
-                <input type="hidden" id="mechanicSignatureData" name="mechanicSignatureData" value="">
-                <input type="hidden" id="driverSignatureData" name="driverSignatureData" value="">
-                <input type="hidden" id="maintenanceManagerSignatureData" name="maintenanceManagerSignatureData" value="">
-                <input type="hidden" id="managerSignatureData" name="managerSignatureData" value="">
-            </form>
+            <!-- Hidden fields to keep attached signature data -->
+            <input type="hidden" id="mechanicSignatureData" name="mechanicSignatureData" value="">
+            <input type="hidden" id="driverSignatureData" name="driverSignatureData" value="">
+            <input type="hidden" id="maintenanceManagerSignatureData" name="maintenanceManagerSignatureData" value="">
+            <input type="hidden" id="managerSignatureData" name="managerSignatureData" value="">
         </div>
     </div>
 
@@ -443,11 +462,139 @@
     </div>
 
     <script>
-        // API URL - REPLACE THIS WITH YOUR NEW DEPLOYMENT URL
-        const API_URL = 'https://script.google.com/macros/s/YOUR-NEW-DEPLOYMENT-ID/exec';
+        // API URL - UPDATE THIS WITH YOUR ACTUAL APPS SCRIPT URL
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxT24I2_Z99nCl-kjPqQ8ewdJPP-0NMVtWOIgSDAigoU7UbZc_C-DjF-JsF_5K_qnRRpA/exec';
 
-        // Set today's date
-        document.getElementById('date').valueAsDate = new Date();
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Job Card System Loaded");
+            
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+
+            // Add event listeners
+            document.getElementById('addBtn').addEventListener('click', addRow);
+            document.getElementById('printBtn').addEventListener('click', printJobCard);
+            document.getElementById('signatureBtn').addEventListener('click', showSignatureModal);
+            document.getElementById('saveBtn').addEventListener('click', saveJobCard);
+            document.getElementById('labour').addEventListener('input', calculateTotals);
+
+            // Parts table event delegation
+            document.getElementById('partsBody').addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-small')) {
+                    removeRow(e.target);
+                }
+            });
+
+            document.getElementById('partsBody').addEventListener('input', function(e) {
+                if (e.target.type === 'number') {
+                    calculateTotals();
+                }
+            });
+
+            calculateTotals();
+        });
+
+        // Add new row
+        function addRow() {
+            const tbody = document.getElementById('partsBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" placeholder="Part/Item"></td>
+                <td><input type="number" value="1" min="1"></td>
+                <td><input type="number" value="0" step="0.001"></td>
+                <td><input type="text" placeholder="Service Performed"></td>
+                <td class="no-print">
+                    <button type="button" class="btn btn-small">Remove</button>
+                </td>
+            `;
+            tbody.appendChild(newRow);
+            calculateTotals();
+        }
+
+        // Remove row
+        function removeRow(button) {
+            const row = button.closest('tr');
+            if (row && document.getElementById('partsBody').children.length > 1) {
+                row.remove();
+                calculateTotals();
+            }
+        }
+
+        // Calculate totals
+        function calculateTotals() {
+            let partsTotal = 0;
+            const rows = document.querySelectorAll('#partsBody tr');
+
+            rows.forEach(row => {
+                const qty = parseFloat(row.querySelector('td:nth-child(2) input').value) || 0;
+                const price = parseFloat(row.querySelector('td:nth-child(3) input').value) || 0;
+                partsTotal += qty * price;
+            });
+
+            const labour = parseFloat(document.getElementById('labour').value) || 0;
+            const grandTotal = partsTotal + labour;
+
+            document.getElementById('totalParts').textContent = partsTotal.toFixed(3) + ' BD';
+            document.getElementById('grandTotal').textContent = grandTotal.toFixed(3) + ' BD';
+        }
+
+        // Print job card
+        function printJobCard() {
+            window.print();
+        }
+
+        // Show signature modal
+        function showSignatureModal() {
+            const workOrder = document.getElementById('workOrderNo').value;
+            if (!workOrder) { 
+                showStatus('Please enter Work Order No first', 'error');
+                return; 
+            }
+            document.getElementById('modalWorkOrder').textContent = workOrder;
+            document.getElementById('signatureModal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('signatureModal').style.display = 'none';
+        }
+
+        // Attach signature
+        function attachSignature(role) {
+            const input = document.getElementById(role + 'File');
+            if (!input.files.length) {
+                showStatus('Please select an image file first', 'error');
+                return;
+            }
+
+            const file = input.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+
+                // Update preview
+                const preview = document.getElementById(role + 'Preview');
+                preview.innerHTML = `<img src="${dataUrl}" style="max-width: 100%; max-height: 120px; border: 1px solid #ddd;">`;
+
+                // Update signature line
+                const signLine = document.getElementById(role + 'Sign');
+                signLine.innerHTML = `<img src="${dataUrl}" style="max-height: 40px;">`;
+                signLine.style.borderBottom = 'none';
+
+                // Update status
+                document.getElementById(role + 'Status').textContent = '[Attached]';
+
+                // Store in hidden field
+                document.getElementById(role + 'SignatureData').value = dataUrl;
+
+                showStatus('Signature attached successfully!', 'success');
+            };
+
+            reader.readAsDataURL(file);
+        }
 
         // Show status message
         function showStatus(message, type) {
@@ -461,139 +608,37 @@
             }, 5000);
         }
 
-        // Initialize when page loads
-        window.onload = function() {
-            console.log("Job Card System Initialized");
-
-            const addBtn = document.getElementById('addBtn');
-            const partsBody = document.getElementById('partsBody');
-            const printBtn = document.getElementById('printBtn');
-            const signatureBtn = document.getElementById('signatureBtn');
-            const saveBtn = document.getElementById('saveBtn');
-            const labourEl = document.getElementById('labour');
-
-            if (addBtn) addBtn.addEventListener('click', addRow);
-            if (printBtn) printBtn.addEventListener('click', () => window.print());
-            if (signatureBtn) signatureBtn.addEventListener('click', showLinks);
-            if (saveBtn) saveBtn.addEventListener('click', saveJobCard);
-            if (labourEl) labourEl.addEventListener('input', calculateTotals);
-
-            // Delegation: handle input changes inside partsBody and remove button clicks
-            if (partsBody) {
-                partsBody.addEventListener('input', function(e) {
-                    if (e.target && (e.target.matches('input[type="number"]') || e.target.matches('input'))) {
-                        calculateTotals();
-                    }
-                });
-                partsBody.addEventListener('click', function(e) {
-                    if (e.target && e.target.matches('.btn-small')) {
-                        removeRow(e.target);
-                    }
-                });
-            }
-
-            // Make sure existing first-row inputs trigger calculate
-            const q1 = document.getElementById('qty1');
-            const p1 = document.getElementById('price1');
-            if (q1) q1.addEventListener('input', calculateTotals);
-            if (p1) p1.addEventListener('input', calculateTotals);
-
-            calculateTotals();
-        };
-
-        // Add new row
-        function addRow() {
-            const tbody = document.getElementById('partsBody');
-            const rowCount = tbody.children.length + 1;
-
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td><input type="text" placeholder="Part/Item"></td>
-                <td><input type="number" value="1" min="1" id="qty${rowCount}"></td>
-                <td><input type="number" value="0" step="0.001" id="price${rowCount}"></td>
-                <td><input type="text" placeholder="Service Performed"></td>
-                <td class="no-print">
-                    <button type="button" class="btn btn-small">Remove</button>
-                </td>
-            `;
-            tbody.appendChild(newRow);
-
-            const qty = document.getElementById('qty' + rowCount);
-            const price = document.getElementById('price' + rowCount);
-            if (qty) qty.addEventListener('input', calculateTotals);
-            if (price) price.addEventListener('input', calculateTotals);
-
-            calculateTotals();
-        }
-
-        // Remove row
-        function removeRow(button) {
-            const row = button.closest('tr');
-            if (row) row.remove();
-            calculateTotals();
-        }
-
-        // Calculate totals
-        function calculateTotals() {
-            let partsTotal = 0;
-            const rows = document.querySelectorAll('#partsBody tr');
-
-            rows.forEach((row, index) => {
-                const qtyInput = row.querySelector('td:nth-child(2) input');
-                const priceInput = row.querySelector('td:nth-child(3) input');
-
-                const qty = parseFloat(qtyInput?.value) || 0;
-                const price = parseFloat(priceInput?.value) || 0;
-                const rowTotal = qty * price;
-
-                partsTotal += rowTotal;
-            });
-
-            const labour = parseFloat(document.getElementById('labour')?.value) || 0;
-            const grandTotal = partsTotal + labour;
-
-            document.getElementById('totalParts').textContent = partsTotal.toFixed(3) + ' BD';
-            document.getElementById('grandTotal').textContent = grandTotal.toFixed(3) + ' BD';
-        }
-
-        // Collect parts data for API
+        // Collect parts data
         function getPartsData() {
             const parts = [];
             const rows = document.querySelectorAll('#partsBody tr');
             
-            rows.forEach((row, index) => {
-                const partName = row.querySelector('td:nth-child(1) input')?.value || '';
-                const qty = row.querySelector('td:nth-child(2) input')?.value || '1';
-                const price = row.querySelector('td:nth-child(3) input')?.value || '0';
-                const service = row.querySelector('td:nth-child(4) input')?.value || '';
+            rows.forEach(row => {
+                const partName = row.querySelector('td:nth-child(1) input').value;
+                const qty = row.querySelector('td:nth-child(2) input').value;
+                const price = row.querySelector('td:nth-child(3) input').value;
+                const service = row.querySelector('td:nth-child(4) input').value;
                 
                 if (partName || service) {
-                    parts.push({
-                        partName: partName,
-                        qty: qty,
-                        price: price,
-                        service: service
-                    });
+                    parts.push({ partName, qty, price, service });
                 }
             });
             
             return parts;
         }
 
-        // MAIN SAVE FUNCTION - FIXED AND WORKING
+        // Save job card
         async function saveJobCard() {
-            // Validate required fields
-            const requiredFields = ['workOrderNo', 'vehicleNo', 'companyName', 'userName'];
-            for (const field of requiredFields) {
+            const required = ['workOrderNo', 'vehicleNo', 'companyName', 'userName'];
+            for (const field of required) {
                 if (!document.getElementById(field).value.trim()) {
-                    showStatus(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`, 'error');
+                    showStatus(`Please fill in ${field}`, 'error');
                     return;
                 }
             }
 
             showStatus('Saving job card...', 'success');
 
-            // Collect all data from the form
             const jobCardData = {
                 date: document.getElementById('date').value,
                 workOrderNo: document.getElementById('workOrderNo').value,
@@ -613,126 +658,35 @@
                 maintenanceManagerSignatureData: document.getElementById('maintenanceManagerSignatureData').value,
                 managerSignatureData: document.getElementById('managerSignatureData').value
             };
-            
-            console.log('Sending data to Google Sheets:', jobCardData);
 
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                    'Accept': 'application/json'
                     },
                     body: JSON.stringify(jobCardData)
                 });
                 
                 const result = await response.json();
-                console.log('API Response:', result);
                 
                 if (result.success) {
                     showStatus('✅ ' + result.message, 'success');
-                    // Optional: Clear form after successful save
-                    setTimeout(() => {
-                        document.getElementById('jobCardForm').reset();
-                        document.getElementById('date').valueAsDate = new Date();
-                        showStatus('Form cleared - ready for next job card!', 'success');
-                    }, 2000);
                 } else {
-                    showStatus('❌ Error: ' + (result.message || result.error), 'error');
+                    showStatus('❌ ' + (result.message || result.error), 'error');
                 }
             } catch (error) {
-                console.error('Fetch Error:', error);
-                showStatus('❌ Network error. Check API URL and try again.', 'error');
+                showStatus('❌ Network error. Please try again.', 'error');
+                console.error('Error:', error);
             }
-        }
-
-        // Show signature modal
-        function showLinks() {
-            const workOrder = document.getElementById('workOrderNo').value;
-            if (!workOrder) { 
-                alert('Please enter Work Order No first'); 
-                return; 
-            }
-            document.getElementById('modalWorkOrder').textContent = workOrder;
-
-            // Clear previous previews
-            ['mechanic','driver','maintenanceManager','manager'].forEach(role => {
-                const prev = document.getElementById(role + 'Preview');
-                if (prev) prev.innerHTML = '';
-            });
-
-            document.getElementById('signatureModal').style.display = 'block';
-        }
-
-        // Attach signature locally
-        function attachSignature(role) {
-            const input = document.getElementById(role + 'File');
-            if (!input || !input.files || input.files.length === 0) {
-                alert('Please choose an image file first.');
-                return;
-            }
-            const file = input.files[0];
-            if (!file.type.startsWith('image/')) {
-                alert('Please select an image file (JPEG, PNG, etc.).');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const dataUrl = e.target.result;
-
-                // Preview inside modal
-                const preview = document.getElementById(role + 'Preview');
-                if (preview) {
-                    preview.innerHTML = '';
-                    const pvImg = document.createElement('img');
-                    pvImg.src = dataUrl;
-                    pvImg.style.maxWidth = '100%';
-                    pvImg.style.maxHeight = '120px';
-                    pvImg.style.border = '1px solid #ddd';
-                    preview.appendChild(pvImg);
-                }
-
-                // Place signature image into the job card signature area
-                const signLine = document.getElementById(role + 'Sign');
-                if (signLine) {
-                    signLine.innerHTML = '';
-                    signLine.style.borderBottom = 'none';
-                    signLine.style.height = 'auto';
-                    signLine.style.padding = '6px 0';
-
-                    const img = document.createElement('img');
-                    img.src = dataUrl;
-                    img.alt = `${role} signature`;
-                    img.style.maxHeight = '40px';
-                    img.style.display = 'block';
-                    img.style.margin = '0 auto';
-
-                    signLine.appendChild(img);
-                }
-
-                const status = document.getElementById(role + 'Status');
-                if (status) status.textContent = '[Attached]';
-
-                // Store data URL in hidden input so Save Job Card will include it
-                const hidden = document.getElementById(role + 'SignatureData');
-                if (hidden) hidden.value = dataUrl;
-
-                showStatus('✅ Signature attached! Click "Save Job Card" to save.', 'success');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function closeModal() {
-            document.getElementById('signatureModal').style.display = 'none';
         }
 
         // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target && event.target.id === 'signatureModal') {
+        window.addEventListener('click', function(event) {
+            if (event.target.id === 'signatureModal') {
                 closeModal();
             }
-        }
+        });
     </script>
 </body>
 </html>

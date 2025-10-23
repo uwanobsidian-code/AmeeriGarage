@@ -136,7 +136,14 @@
         }
         .logo-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+        }
+        .logo-img {
+            max-height: 80px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
 
         /* PRINT STYLES - FIXED */
@@ -215,7 +222,7 @@
         <!-- Company Header -->
         <div class="company-header">
             <div class="logo-container">
-                <!-- Logo added here -->
+                <!-- Logo with proper sizing -->
                 <img src="ameeriserviceswhitelogo.png" alt="AMEERI SERVICES Logo" class="logo-img">
             </div>
             <div class="company-name">AMEERI SERVICES CO. W.L.L</div>
@@ -390,8 +397,6 @@
     </div>
 
     <script>
-        // Fix: remove stray paren and use robust listeners + links + delegation
-
         // Set today's date
         document.getElementById('date').valueAsDate = new Date();
 

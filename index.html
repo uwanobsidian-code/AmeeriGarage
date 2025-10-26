@@ -576,41 +576,76 @@
             return 'job_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         }
 
-        // Save job card to Firebase and generate shareable link
-        async function saveJobCardAndGenerateLink() {
-            const jobData = collectFormData();
-            const jobId = generateJobId();
+       // Save job card to Firebase and generate shareable link
+async function saveJobCardAndGenerateLink() {
+    const jobData = collectFormData();
+    
+    // Validate required fields
+    if (!jobData.workOrderNo) {
+        alert('Please enter Work Order No');
+        return;
+    }
+
+    // Use Work Order Number as the main ID (clean it up first)
+    const jobId = 'job_' + jobData.workOrderNo.replace(/\s+/g, '_').toUpperCase();
+    
+    try {
+        // Save to Firebase
+        await db.collection('jobCards').doc(jobId).set({
+            ...jobData,
+            id: jobId
+        });
+
+        // Store current job ID
+        document.getElementById('currentJobId').value = jobId;
+
+        // Generate shareable link using Work Order Number
+        const shareLink = `${window.location.origin}${window.location.pathname}?job=${jobData.workOrderNo}`;
+        
+        // Show link to user
+        document.getElementById('shareLink').textContent = shareLink;
+        document.getElementById('shareLinkContainer').style.display = 'block';
+        document.getElementById('generateLinkBtn').style.display = 'none';
+        
+        alert('✅ Job card saved! Share this link: ' + jobData.workOrderNo);
+    } catch (error) {
+        console.error('Error saving job card:', error);
+        alert('❌ Error saving job card. Please try again.');
+    }
+}
+
+// Also update the load function to handle Work Order Numbers
+async function loadJobCardFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const workOrderNo = urlParams.get('job');
+    
+    if (workOrderNo) {
+        try {
+            // Convert Work Order Number to job ID format
+            const jobId = 'job_' + workOrderNo.replace(/\s+/g, '_').toUpperCase();
             
-            // Validate required fields
-            if (!jobData.workOrderNo) {
-                alert('Please enter Work Order No');
-                return;
-            }
-
-            try {
-                // Save to Firebase
-                await db.collection('jobCards').doc(jobId).set({
-                    ...jobData,
-                    id: jobId
-                });
-
-                // Store current job ID
-                document.getElementById('currentJobId').value = jobId;
-
-                // Generate shareable link
-                const shareLink = `${window.location.origin}${window.location.pathname}?job=${jobId}`;
+            const doc = await db.collection('jobCards').doc(jobId).get();
+            if (doc.exists) {
+                const jobData = doc.data();
+                populateForm(jobData);
                 
-                // Show link to user
-                document.getElementById('shareLink').textContent = shareLink;
-                document.getElementById('shareLinkContainer').style.display = 'block';
+                // Hide save button for signature collectors
                 document.getElementById('generateLinkBtn').style.display = 'none';
+                document.getElementById('shareSection').style.display = 'none';
                 
-                alert('✅ Job card saved! Share the link to collect signatures.');
-            } catch (error) {
-                console.error('Error saving job card:', error);
-                alert('❌ Error saving job card. Please try again.');
+                // Show current job ID
+                document.getElementById('currentJobId').value = jobId;
+                
+                console.log('Job card loaded:', jobData.workOrderNo);
+            } else {
+                console.log('Job card not found for work order:', workOrderNo);
+                alert('Job card not found for: ' + workOrderNo);
             }
+        } catch (error) {
+            console.error('Error loading job card:', error);
         }
+    }
+}
 
         // Load job card when someone opens shared link
         async function loadJobCardFromUrl() {

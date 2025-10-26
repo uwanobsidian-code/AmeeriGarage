@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMEERI SERVICES - Job Card</title>
+    <title>AMEERI SERVICES - Job Card System</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -145,8 +150,23 @@
             display: block;
             margin: 0 auto;
         }
+        .share-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 8px;
+            border: 2px solid #1a3a8f;
+        }
+        .share-link {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            word-break: break-all;
+        }
 
-        /* PRINT STYLES - FIXED */
+        /* PRINT STYLES */
         @media print {
             body {
                 background: white !important;
@@ -177,7 +197,7 @@
             }
         }
 
-        /* Signature Links Modal */
+        /* Signature Modal */
         .modal {
             display: none;
             position: fixed;
@@ -222,7 +242,6 @@
         <!-- Company Header -->
         <div class="company-header">
             <div class="logo-container">
-                <!-- Logo with proper sizing -->
                 <img src="ameeriserviceswhitelogo.png" alt="AMEERI SERVICES Logo" class="logo-img">
             </div>
             <div class="company-name">AMEERI SERVICES CO. W.L.L</div>
@@ -243,7 +262,7 @@
                     </div>
                     <div class="form-group">
                         <label for="workOrderNo">WORK ORDER NO</label>
-                        <input type="text" id="workOrderNo" required value="2839">
+                        <input type="text" id="workOrderNo" required>
                     </div>
                 </div>
 
@@ -251,11 +270,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="companyName">COMPANY NAME</label>
-                        <input type="text" id="companyName" value="Ameeri Bloep">
+                        <input type="text" id="companyName">
                     </div>
                     <div class="form-group">
                         <label for="userName">NAME OF USER/DRIVER</label>
-                        <input type="text" id="userName" value="NyxN">
+                        <input type="text" id="userName">
                     </div>
                 </div>
 
@@ -263,27 +282,27 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="vehicleNo">VEHICLE NO</label>
-                        <input type="text" id="vehicleNo" value="609712">
+                        <input type="text" id="vehicleNo">
                     </div>
                     <div class="form-group">
                         <label for="mileage">MILEAGE</label>
-                        <input type="text" id="mileage" value="158550km">
+                        <input type="text" id="mileage">
                     </div>
                     <div class="form-group">
                         <label for="year">YEAR</label>
-                        <input type="text" id="year" value="2017">
+                        <input type="text" id="year">
                     </div>
                     <div class="form-group">
                         <label for="make">MAKE</label>
-                        <input type="text" id="make" value="TOYOTA">
+                        <input type="text" id="make">
                     </div>
                     <div class="form-group">
                         <label for="model">MODEL</label>
-                        <input type="text" id="model" value="COPOLUT">
+                        <input type="text" id="model">
                     </div>
                 </div>
 
-                <!-- Parts Table (Unit column removed) -->
+                <!-- Parts Table -->
                 <table class="parts-table">
                     <thead>
                         <tr>
@@ -296,12 +315,12 @@
                     </thead>
                     <tbody id="partsBody">
                         <tr>
-                            <td><input type="text" value="Tyezi 195/65 R15"></td>
-                            <td><input type="number" value="2" min="1" id="qty1"></td>
-                            <td><input type="number" value="30.800" step="0.001" id="price1"></td>
-                            <td><input type="text" value="Tyezi 195/65 R15"></td>
+                            <td><input type="text" placeholder="Part/Item"></td>
+                            <td><input type="number" value="1" min="1"></td>
+                            <td><input type="number" value="0" step="0.001"></td>
+                            <td><input type="text" placeholder="Service Performed"></td>
                             <td class="no-print">
-                                <button type="button" class="btn btn-small" id="remove1">Remove</button>
+                                <button type="button" class="btn btn-small remove-btn">Remove</button>
                             </td>
                         </tr>
                     </tbody>
@@ -313,16 +332,31 @@
                 <div class="totals-section">
                     <div class="total-row">
                         <span>TOTAL PARTS:</span>
-                        <span id="totalParts">61.600 BD</span>
+                        <span id="totalParts">0.000 BD</span>
                     </div>
                     <div class="total-row">
                         <span>TOTAL LABOUR:</span>
-                        <span><input type="number" id="labour" value="5.000" step="0.001" style="width: 100px; display: inline;"> BD</span>
+                        <span><input type="number" id="labour" value="0.000" step="0.001" style="width: 100px; display: inline;"> BD</span>
                     </div>
                     <div class="total-row" style="font-size: 18px; font-weight: bold;">
                         <span>TOTAL PARTS & LABOUR:</span>
-                        <span id="grandTotal">66.600 BD</span>
+                        <span id="grandTotal">0.000 BD</span>
                     </div>
+                </div>
+
+                <!-- Shareable Link Section -->
+                <div class="share-section no-print" id="shareSection">
+                    <h3>🔗 Shareable Job Card Link</h3>
+                    <div id="shareLinkContainer" style="display: none;">
+                        <div class="share-link" id="shareLink"></div>
+                        <button type="button" class="btn copy-btn" onclick="copyShareLink()">Copy Link</button>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Share this link with mechanic, driver, and manager to collect signatures
+                        </p>
+                    </div>
+                    <button type="button" class="btn" id="generateLinkBtn" onclick="saveJobCardAndGenerateLink()">
+                        💾 Save & Generate Shareable Link
+                    </button>
                 </div>
 
                 <!-- Signature Section -->
@@ -348,140 +382,138 @@
 
                 <!-- Action Buttons -->
                 <div style="text-align: center; margin-top: 30px;" class="no-print">
-                    <button type="submit" class="btn">Save Job Card</button>
                     <button type="button" class="btn" id="printBtn">Print Job Card</button>
-                    <button type="button" class="btn" id="signatureBtn">Get Signature Links</button>
+                    <button type="button" class="btn" id="signatureBtn">Upload Signatures</button>
                 </div>
 
-                <!-- Hidden fields to keep attached signature data (data URLs) so Save includes them -->
+                <!-- Hidden fields for signature data -->
                 <input type="hidden" id="mechanicSignatureData" name="mechanicSignatureData" value="">
                 <input type="hidden" id="driverSignatureData" name="driverSignatureData" value="">
                 <input type="hidden" id="managerSignatureData" name="managerSignatureData" value="">
+                <input type="hidden" id="currentJobId" value="">
             </form>
         </div>
     </div>
 
-    <!-- Signature Links Modal -->
+    <!-- Signature Upload Modal -->
     <div id="signatureModal" class="modal">
         <div class="modal-content">
-            <h2>Attach Signatures for Work Order: <span id="modalWorkOrder"></span></h2>
+            <h2>Upload Signatures</h2>
+            <p>Work Order: <strong id="modalWorkOrder"></strong></p>
             
             <div class="signature-link">
                 <strong>🔧 Mechanic Signature:</strong><br>
                 <input type="file" id="mechanicFile" accept="image/*"><br>
-                <button class="btn" onclick="attachSignature('mechanic')">Attach</button>
-                <button class="btn" onclick="uploadSignature('mechanic')">Upload</button>
+                <button class="btn" onclick="attachSignature('mechanic')">Attach Signature</button>
                 <div id="mechanicPreview" style="margin-top:10px;"></div>
             </div>
             
             <div class="signature-link">
                 <strong>👤 User/Driver Signature:</strong><br>
                 <input type="file" id="driverFile" accept="image/*"><br>
-                <button class="btn" onclick="attachSignature('driver')">Attach</button>
-                <button class="btn" onclick="uploadSignature('driver')">Upload</button>
+                <button class="btn" onclick="attachSignature('driver')">Attach Signature</button>
                 <div id="driverPreview" style="margin-top:10px;"></div>
             </div>
             
             <div class="signature-link">
                 <strong>✅ Manager Signature:</strong><br>
                 <input type="file" id="managerFile" accept="image/*"><br>
-                <button class="btn" onclick="attachSignature('manager')">Attach</button>
-                <button class="btn" onclick="uploadSignature('manager')">Upload</button>
+                <button class="btn" onclick="attachSignature('manager')">Attach Signature</button>
                 <div id="managerPreview" style="margin-top:10px;"></div>
             </div>
             
             <div style="margin-top: 20px; text-align: center;">
+                <button class="btn" onclick="saveSignatures()">Save All Signatures</button>
                 <button class="btn" onclick="closeModal()">Close</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Firebase Configuration - USING YOUR ACTUAL CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyCf6aEITVY1RG_KZZT8MKc5otvbHxS80YA",
+            authDomain: "ameeri-services-garage-s-1a50f.firebaseapp.com",
+            projectId: "ameeri-services-garage-s-1a50f",
+            storageBucket: "ameeri-services-garage-s-1a50f.firebasestorage.app",
+            messagingSenderId: "183502312365",
+            appId: "1:183502312365:web:cd6f8bb754c42202144724"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         // Set today's date
         document.getElementById('date').valueAsDate = new Date();
 
         // Initialize when page loads
         window.onload = function() {
-            console.log("Init");
+            console.log("AMEERI Job Card System Started");
 
             const addBtn = document.getElementById('addBtn');
             const partsBody = document.getElementById('partsBody');
             const printBtn = document.getElementById('printBtn');
             const signatureBtn = document.getElementById('signatureBtn');
             const labourEl = document.getElementById('labour');
-            const form = document.getElementById('jobCardForm');
 
             if (addBtn) addBtn.addEventListener('click', addRow);
             if (printBtn) printBtn.addEventListener('click', () => window.print());
-            if (signatureBtn) signatureBtn.addEventListener('click', showLinks);
+            if (signatureBtn) signatureBtn.addEventListener('click', showSignatureModal);
             if (labourEl) labourEl.addEventListener('input', calculateTotals);
-            if (form) form.addEventListener('submit', function(e){ e.preventDefault(); alert('Job Card Saved Successfully!'); });
 
-            // Delegation: handle input changes inside partsBody and remove button clicks
+            // Delegation for parts table
             if (partsBody) {
                 partsBody.addEventListener('input', function(e) {
-                    // only recalc when qty or price changed
-                    if (e.target && (e.target.matches('input[type="number"]') || e.target.matches('input'))) {
+                    if (e.target && (e.target.matches('input[type="number"]'))) {
                         calculateTotals();
                     }
                 });
                 partsBody.addEventListener('click', function(e) {
-                    if (e.target && e.target.matches('.btn-small')) {
+                    if (e.target && e.target.matches('.remove-btn')) {
                         removeRow(e.target);
                     }
                 });
             }
 
-            // Make sure existing first-row inputs trigger calculate
-            const q1 = document.getElementById('qty1');
-            const p1 = document.getElementById('price1');
-            if (q1) q1.addEventListener('input', calculateTotals);
-            if (p1) p1.addEventListener('input', calculateTotals);
+            // Load job card if URL has job ID
+            loadJobCardFromUrl();
 
             calculateTotals();
         };
 
         // Add new row
         function addRow() {
-            console.log("Add row");
             const tbody = document.getElementById('partsBody');
-            const rowCount = tbody.children.length + 1;
-
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td><input type="text" placeholder="Part/Item"></td>
-                <td><input type="number" value="1" min="1" id="qty${rowCount}"></td>
-                <td><input type="number" value="0" step="0.001" id="price${rowCount}"></td>
+                <td><input type="number" value="1" min="1"></td>
+                <td><input type="number" value="0" step="0.001"></td>
                 <td><input type="text" placeholder="Service Performed"></td>
                 <td class="no-print">
-                    <button type="button" class="btn btn-small">Remove</button>
+                    <button type="button" class="btn btn-small remove-btn">Remove</button>
                 </td>
             `;
             tbody.appendChild(newRow);
-
-            // add listeners for the newly created inputs (safe even if delegation exists)
-            const qty = document.getElementById('qty' + rowCount);
-            const price = document.getElementById('price' + rowCount);
-            if (qty) qty.addEventListener('input', calculateTotals);
-            if (price) price.addEventListener('input', calculateTotals);
-
             calculateTotals();
         }
 
-        // Remove row (uses closest to be robust)
+        // Remove row
         function removeRow(button) {
-            console.log("Remove row");
             const row = button.closest('tr');
-            if (row) row.remove();
-            calculateTotals();
+            if (row && document.querySelectorAll('#partsBody tr').length > 1) {
+                row.remove();
+                calculateTotals();
+            }
         }
 
-        // Calculate totals (price is now in 3rd column after removing Unit)
+        // Calculate totals
         function calculateTotals() {
             let partsTotal = 0;
             const rows = document.querySelectorAll('#partsBody tr');
 
-            rows.forEach((row, index) => {
+            rows.forEach((row) => {
                 const qtyInput = row.querySelector('td:nth-child(2) input');
                 const priceInput = row.querySelector('td:nth-child(3) input');
 
@@ -499,22 +531,180 @@
             document.getElementById('grandTotal').textContent = grandTotal.toFixed(3) + ' BD';
         }
 
-        // Show signature modal (now for attach/upload)
-        function showLinks() {
-            const workOrder = document.getElementById('workOrderNo').value;
-            if (!workOrder) { alert('Please enter Work Order No first'); return; }
-            document.getElementById('modalWorkOrder').textContent = workOrder;
-
-            // clear previous previews if any
-            ['mechanic','driver','manager'].forEach(role => {
-                const prev = document.getElementById(role + 'Preview');
-                if (prev) prev.innerHTML = '';
+        // Collect form data
+        function collectFormData() {
+            const parts = [];
+            document.querySelectorAll('#partsBody tr').forEach(row => {
+                const partInput = row.querySelector('td:nth-child(1) input');
+                const qtyInput = row.querySelector('td:nth-child(2) input');
+                const priceInput = row.querySelector('td:nth-child(3) input');
+                const serviceInput = row.querySelector('td:nth-child(4) input');
+                
+                parts.push({
+                    part: partInput?.value || '',
+                    qty: parseFloat(qtyInput?.value) || 0,
+                    price: parseFloat(priceInput?.value) || 0,
+                    service: serviceInput?.value || ''
+                });
             });
 
+            return {
+                date: document.getElementById('date').value,
+                workOrderNo: document.getElementById('workOrderNo').value,
+                companyName: document.getElementById('companyName').value,
+                userName: document.getElementById('userName').value,
+                vehicleNo: document.getElementById('vehicleNo').value,
+                mileage: document.getElementById('mileage').value,
+                year: document.getElementById('year').value,
+                make: document.getElementById('make').value,
+                model: document.getElementById('model').value,
+                parts: parts,
+                labour: parseFloat(document.getElementById('labour').value) || 0,
+                totalParts: document.getElementById('totalParts').textContent,
+                grandTotal: document.getElementById('grandTotal').textContent,
+                mechanicSignature: document.getElementById('mechanicSignatureData').value,
+                driverSignature: document.getElementById('driverSignatureData').value,
+                managerSignature: document.getElementById('managerSignatureData').value,
+                createdAt: new Date().toISOString(),
+                status: 'active'
+            };
+        }
+
+        // Generate unique job ID
+        function generateJobId() {
+            return 'job_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Save job card to Firebase and generate shareable link
+        async function saveJobCardAndGenerateLink() {
+            const jobData = collectFormData();
+            const jobId = generateJobId();
+            
+            // Validate required fields
+            if (!jobData.workOrderNo) {
+                alert('Please enter Work Order No');
+                return;
+            }
+
+            try {
+                // Save to Firebase
+                await db.collection('jobCards').doc(jobId).set({
+                    ...jobData,
+                    id: jobId
+                });
+
+                // Store current job ID
+                document.getElementById('currentJobId').value = jobId;
+
+                // Generate shareable link
+                const shareLink = `${window.location.origin}${window.location.pathname}?job=${jobId}`;
+                
+                // Show link to user
+                document.getElementById('shareLink').textContent = shareLink;
+                document.getElementById('shareLinkContainer').style.display = 'block';
+                document.getElementById('generateLinkBtn').style.display = 'none';
+                
+                alert('✅ Job card saved! Share the link to collect signatures.');
+            } catch (error) {
+                console.error('Error saving job card:', error);
+                alert('❌ Error saving job card. Please try again.');
+            }
+        }
+
+        // Load job card when someone opens shared link
+        async function loadJobCardFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const jobId = urlParams.get('job');
+            
+            if (jobId) {
+                try {
+                    const doc = await db.collection('jobCards').doc(jobId).get();
+                    if (doc.exists) {
+                        const jobData = doc.data();
+                        populateForm(jobData);
+                        
+                        // Hide save button for signature collectors
+                        document.getElementById('generateLinkBtn').style.display = 'none';
+                        document.getElementById('shareSection').style.display = 'none';
+                        
+                        // Show current job ID
+                        document.getElementById('currentJobId').value = jobId;
+                        
+                        console.log('Job card loaded:', jobData.workOrderNo);
+                    } else {
+                        console.log('Job card not found:', jobId);
+                    }
+                } catch (error) {
+                    console.error('Error loading job card:', error);
+                }
+            }
+        }
+
+        // Populate form with job data
+        function populateForm(jobData) {
+            document.getElementById('date').value = jobData.date;
+            document.getElementById('workOrderNo').value = jobData.workOrderNo;
+            document.getElementById('companyName').value = jobData.companyName || '';
+            document.getElementById('userName').value = jobData.userName || '';
+            document.getElementById('vehicleNo').value = jobData.vehicleNo || '';
+            document.getElementById('mileage').value = jobData.mileage || '';
+            document.getElementById('year').value = jobData.year || '';
+            document.getElementById('make').value = jobData.make || '';
+            document.getElementById('model').value = jobData.model || '';
+            document.getElementById('labour').value = jobData.labour || 0;
+
+            // Populate parts table
+            const partsBody = document.getElementById('partsBody');
+            partsBody.innerHTML = '';
+            
+            if (jobData.parts && jobData.parts.length > 0) {
+                jobData.parts.forEach(part => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="text" value="${part.part}"></td>
+                        <td><input type="number" value="${part.qty}" min="1"></td>
+                        <td><input type="number" value="${part.price}" step="0.001"></td>
+                        <td><input type="text" value="${part.service}"></td>
+                        <td class="no-print">
+                            <button type="button" class="btn btn-small remove-btn">Remove</button>
+                        </td>
+                    `;
+                    partsBody.appendChild(row);
+                });
+            } else {
+                // Add empty row if no parts
+                addRow();
+            }
+
+            // Populate signatures if they exist
+            if (jobData.mechanicSignature) {
+                displaySignature('mechanic', jobData.mechanicSignature);
+            }
+            if (jobData.driverSignature) {
+                displaySignature('driver', jobData.driverSignature);
+            }
+            if (jobData.managerSignature) {
+                displaySignature('manager', jobData.managerSignature);
+            }
+
+            calculateTotals();
+        }
+
+        // Show signature modal
+        function showSignatureModal() {
+            const jobId = document.getElementById('currentJobId').value;
+            const workOrder = document.getElementById('workOrderNo').value;
+            
+            if (!jobId && !workOrder) {
+                alert('Please save the job card first or load an existing one');
+                return;
+            }
+
+            document.getElementById('modalWorkOrder').textContent = workOrder || 'Not saved yet';
             document.getElementById('signatureModal').style.display = 'block';
         }
 
-        // Attach signature locally and show preview + place on job card
+        // Attach signature locally
         function attachSignature(role) {
             const input = document.getElementById(role + 'File');
             if (!input || !input.files || input.files.length === 0) {
@@ -542,70 +732,88 @@
                     preview.appendChild(pvImg);
                 }
 
-                // Place signature image into the job card signature area
-                const signLine = document.getElementById(role + 'Sign');
-                if (signLine) {
-                    signLine.innerHTML = '';
-                    signLine.style.borderBottom = 'none';
-                    signLine.style.height = 'auto';
-                    signLine.style.padding = '6px 0';
-
-                    const img = document.createElement('img');
-                    img.src = dataUrl;
-                    img.alt = `${role} signature`;
-                    img.style.maxHeight = '40px';
-                    img.style.display = 'block';
-                    img.style.margin = '0 auto';
-
-                    signLine.appendChild(img);
-                }
-
-                const status = document.getElementById(role + 'Status');
-                if (status) status.textContent = '[Attached]';
-
-                // store data URL in hidden input so Save Job Card will include it
-                const hidden = document.getElementById(role + 'SignatureData');
-                if (hidden) hidden.value = dataUrl;
-
-                // store data URL on input element for possible client-only upload
-                input.dataset.preview = dataUrl;
+                // Store data URL on input element
+                input.dataset.signatureData = dataUrl;
             };
             reader.readAsDataURL(file);
         }
 
-        // Upload signature file to server endpoint (requires server-side /upload-signature)
-        function uploadSignature(role) {
-            const input = document.getElementById(role + 'File');
-            if (!input || !input.files || input.files.length === 0) {
-                alert('Choose an image file first.');
+        // Save all signatures to Firebase
+        async function saveSignatures() {
+            const jobId = document.getElementById('currentJobId').value;
+            if (!jobId) {
+                alert('No job card loaded. Please save the job card first.');
                 return;
             }
-            const file = input.files[0];
 
-            const workOrder = document.getElementById('workOrderNo').value || '';
-            const form = new FormData();
-            form.append('file', file);
-            form.append('role', role);
-            form.append('workOrder', workOrder);
+            try {
+                const updates = {};
+                let hasSignatures = false;
 
-            // Use explicit server URL — change port/host when hosted
-            const uploadUrl = 'http://localhost:3000/upload-signature';
+                // Check each role for new signatures
+                ['mechanic', 'driver', 'manager'].forEach(role => {
+                    const input = document.getElementById(role + 'File');
+                    if (input && input.dataset.signatureData) {
+                        updates[role + 'Signature'] = input.dataset.signatureData;
+                        hasSignatures = true;
+                        
+                        // Display signature immediately
+                        displaySignature(role, input.dataset.signatureData);
+                    }
+                });
 
-            fetch(uploadUrl, {
-                method: 'POST',
-                body: form
-            }).then(async response => {
-                if (!response.ok) {
-                    // attempt to read server message/body
-                    let bodyText = '';
-                    try { bodyText = await response.text(); } catch {}
-                    throw new Error('Upload failed: ' + response.status + ' ' + bodyText);
+                if (!hasSignatures) {
+                    alert('No signatures to save. Please attach signatures first.');
+                    return;
                 }
-                return response.json().catch(()=>({ ok: true }));
-            }).then(json => {
-                alert('Upload successful.');
-            }).catch(err => {
-                alert('Upload failed. When hosted live, provide a server endpoint /upload-signature to accept multipart/form-data. Error: ' + (err.message || err));
+
+                // Update Firebase
+                await db.collection('jobCards').doc(jobId).update(updates);
+                
+                alert('✅ Signatures saved successfully!');
+                closeModal();
+            } catch (error) {
+                console.error('Error saving signatures:', error);
+                alert('❌ Error saving signatures. Please try again.');
+            }
+        }
+
+        // Display signature on job card
+        function displaySignature(role, dataUrl) {
+            const signLine = document.getElementById(role + 'Sign');
+            const status = document.getElementById(role + 'Status');
+            
+            if (signLine) {
+                signLine.innerHTML = '';
+                signLine.style.borderBottom = 'none';
+                signLine.style.height = 'auto';
+                signLine.style.padding = '6px 0';
+
+                const img = document.createElement('img');
+                img.src = dataUrl;
+                img.alt = `${role} signature`;
+                img.style.maxHeight = '40px';
+                img.style.display = 'block';
+                img.style.margin = '0 auto';
+
+                signLine.appendChild(img);
+            }
+
+            if (status) {
+                status.textContent = '[Signed]';
+                status.style.color = 'green';
+            }
+
+            // Store in hidden field
+            const hidden = document.getElementById(role + 'SignatureData');
+            if (hidden) hidden.value = dataUrl;
+        }
+
+        // Copy share link to clipboard
+        function copyShareLink() {
+            const link = document.getElementById('shareLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copied to clipboard!');
             });
         }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMEERI SERVICES - Job Card System</title>
+    <title>AMEERI SERVICES - Job Card</title>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
@@ -166,19 +166,25 @@
             word-break: break-all;
         }
 
-        /* PRINT STYLES */
+        /* PRINT STYLES - FIXED */
         @media print {
+            @page {
+                margin: 0.5cm;
+                size: A4 portrait;
+            }
             body {
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .job-card {
                 width: 100% !important;
                 margin: 0 !important;
                 box-shadow: none !important;
                 border-radius: 0 !important;
-                border: 1px solid #000 !important;
+                border: none !important;
             }
             .no-print {
                 display: none !important;
@@ -188,12 +194,42 @@
                 color: white !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                margin: 0 !important;
+                padding: 15px !important;
             }
             .card-title {
                 background: #2c5fbd !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                margin: 0 !important;
+                padding: 10px !important;
+            }
+            .form-section {
+                padding: 15px !important;
+                margin: 0 !important;
+            }
+            .parts-table {
+                width: 100% !important;
+                font-size: 12px !important;
+            }
+            .parts-table th, .parts-table td {
+                padding: 6px !important;
+            }
+            input {
+                border: none !important;
+                background: transparent !important;
+                padding: 2px !important;
+                box-shadow: none !important;
+            }
+            .totals-section {
+                margin: 15px 0 !important;
+                padding: 15px !important;
+            }
+            
+            /* Hide URL and page numbers */
+            .job-card::after {
+                display: none !important;
             }
         }
 
@@ -344,21 +380,20 @@
                     </div>
                 </div>
 
-            <!-- Shareable Link Section -->
-<div class="share-section no-print" id="shareSection">
-    <h3>🔗 Shareable Job Card Link</h3>
-    <div id="shareLinkContainer" style="display: none;">
-        <div class="share-link" id="shareLink"></div>
-        <button type="button" class="btn copy-btn" onclick="copyShareLink()">Copy Link</button>
-        <p style="font-size: 12px; color: #666; margin-top: 5px;">
-            Share this link with mechanic, driver, and manager to collect signatures
-        </p>
-    </div>
-    <!-- THIS IS THE BUTTON YOU NEED -->
-    <button type="button" class="btn" id="generateLinkBtn" onclick="saveJobCardAndGenerateLink()">
-        💾 Save & Generate Shareable Link
-    </button>
-</div>
+                <!-- Shareable Link Section -->
+                <div class="share-section no-print" id="shareSection">
+                    <h3>🔗 Shareable Job Card Link</h3>
+                    <div id="shareLinkContainer" style="display: none;">
+                        <div class="share-link" id="shareLink"></div>
+                        <button type="button" class="btn copy-btn" onclick="copyShareLink()">Copy Link</button>
+                        <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                            Share this link with mechanic, driver, and manager to collect signatures
+                        </p>
+                    </div>
+                    <button type="button" class="btn" id="generateLinkBtn" onclick="saveJobCardAndGenerateLink()">
+                        💾 Save & Generate Shareable Link
+                    </button>
+                </div>
 
                 <!-- Signature Section -->
                 <div class="signature-section">
@@ -431,7 +466,7 @@
     </div>
 
     <script>
-        // Firebase Configuration - USING YOUR ACTUAL CONFIG
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCf6aEITVY1RG_KZZT8MKc5otvbHxS80YA",
             authDomain: "ameeri-services-garage-s-1a50f.firebaseapp.com",
@@ -459,7 +494,7 @@
             const labourEl = document.getElementById('labour');
 
             if (addBtn) addBtn.addEventListener('click', addRow);
-            if (printBtn) printBtn.addEventListener('click', () => window.print());
+            if (printBtn) printBtn.addEventListener('click', printJobCard);
             if (signatureBtn) signatureBtn.addEventListener('click', showSignatureModal);
             if (labourEl) labourEl.addEventListener('input', calculateTotals);
 
@@ -477,11 +512,19 @@
                 });
             }
 
-            // Load job card if URL has job ID
+            // Load job card if URL has job ID - THIS IS CRITICAL FOR SHARED LINKS
             loadJobCardFromUrl();
 
             calculateTotals();
         };
+
+        // Custom print function
+        function printJobCard() {
+            const originalTitle = document.title;
+            document.title = "AMEERI SERVICES - Job Card";
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
 
         // Add new row
         function addRow() {
@@ -571,115 +614,90 @@
             };
         }
 
-        // Generate unique job ID
-        function generateJobId() {
-            return 'job_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-
-       // Save job card to Firebase and generate shareable link
-async function saveJobCardAndGenerateLink() {
-    const jobData = collectFormData();
-    
-    // Validate required fields
-    if (!jobData.workOrderNo) {
-        alert('Please enter Work Order No');
-        return;
-    }
-
-    // Use Work Order Number as the main ID (clean it up first)
-    const jobId = 'job_' + jobData.workOrderNo.replace(/\s+/g, '_').toUpperCase();
-    
-    try {
-        // Save to Firebase
-        await db.collection('jobCards').doc(jobId).set({
-            ...jobData,
-            id: jobId
-        });
-
-        // Store current job ID
-        document.getElementById('currentJobId').value = jobId;
-
-        // Generate shareable link using Work Order Number
-        const shareLink = `${window.location.origin}${window.location.pathname}?job=${jobData.workOrderNo}`;
-        
-        // Show link to user
-        document.getElementById('shareLink').textContent = shareLink;
-        document.getElementById('shareLinkContainer').style.display = 'block';
-        document.getElementById('generateLinkBtn').style.display = 'none';
-        
-        alert('✅ Job card saved! Share this link: ' + jobData.workOrderNo);
-    } catch (error) {
-        console.error('Error saving job card:', error);
-        alert('❌ Error saving job card. Please try again.');
-    }
-}
-
-// Also update the load function to handle Work Order Numbers
-async function loadJobCardFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const workOrderNo = urlParams.get('job');
-    
-    if (workOrderNo) {
-        try {
-            // Convert Work Order Number to job ID format
-            const jobId = 'job_' + workOrderNo.replace(/\s+/g, '_').toUpperCase();
+        // Save job card to Firebase and generate shareable link
+        async function saveJobCardAndGenerateLink() {
+            const jobData = collectFormData();
             
-            const doc = await db.collection('jobCards').doc(jobId).get();
-            if (doc.exists) {
-                const jobData = doc.data();
-                populateForm(jobData);
-                
-                // Hide save button for signature collectors
-                document.getElementById('generateLinkBtn').style.display = 'none';
-                document.getElementById('shareSection').style.display = 'none';
-                
-                // Show current job ID
-                document.getElementById('currentJobId').value = jobId;
-                
-                console.log('Job card loaded:', jobData.workOrderNo);
-            } else {
-                console.log('Job card not found for work order:', workOrderNo);
-                alert('Job card not found for: ' + workOrderNo);
+            // Validate required fields
+            if (!jobData.workOrderNo) {
+                alert('Please enter Work Order No');
+                return;
             }
-        } catch (error) {
-            console.error('Error loading job card:', error);
-        }
-    }
-}
 
-        // Load job card when someone opens shared link
+            // Use Work Order Number as the main ID
+            const jobId = 'job_' + jobData.workOrderNo.replace(/\s+/g, '_').toUpperCase();
+            
+            try {
+                // Save to Firebase
+                await db.collection('jobCards').doc(jobId).set({
+                    ...jobData,
+                    id: jobId
+                });
+
+                // Store current job ID
+                document.getElementById('currentJobId').value = jobId;
+
+                // Generate shareable link using Work Order Number
+                const shareLink = `${window.location.origin}${window.location.pathname}?job=${jobData.workOrderNo}`;
+                
+                // Show link to user
+                document.getElementById('shareLink').textContent = shareLink;
+                document.getElementById('shareLinkContainer').style.display = 'block';
+                document.getElementById('generateLinkBtn').style.display = 'none';
+                
+                alert('✅ Job card saved! Share this link: ' + shareLink);
+            } catch (error) {
+                console.error('Error saving job card:', error);
+                alert('❌ Error saving job card. Please try again.');
+            }
+        }
+
+        // Load job card when someone opens shared link - FIXED VERSION
         async function loadJobCardFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
-            const jobId = urlParams.get('job');
+            const workOrderNo = urlParams.get('job');
             
-            if (jobId) {
+            if (workOrderNo) {
+                console.log('Loading job card for Work Order:', workOrderNo);
+                
                 try {
+                    // Convert Work Order Number to job ID format
+                    const jobId = 'job_' + workOrderNo.replace(/\s+/g, '_').toUpperCase();
+                    console.log('Looking for job ID:', jobId);
+                    
                     const doc = await db.collection('jobCards').doc(jobId).get();
+                    
                     if (doc.exists) {
                         const jobData = doc.data();
+                        console.log('Job data found:', jobData);
                         populateForm(jobData);
                         
-                        // Hide save button for signature collectors
+                        // Hide save button and share section for signature collectors
                         document.getElementById('generateLinkBtn').style.display = 'none';
                         document.getElementById('shareSection').style.display = 'none';
                         
                         // Show current job ID
                         document.getElementById('currentJobId').value = jobId;
                         
-                        console.log('Job card loaded:', jobData.workOrderNo);
+                        console.log('✅ Job card loaded successfully:', jobData.workOrderNo);
                     } else {
-                        console.log('Job card not found:', jobId);
+                        console.log('❌ Job card not found for work order:', workOrderNo);
+                        alert('Job card not found for: ' + workOrderNo);
                     }
                 } catch (error) {
                     console.error('Error loading job card:', error);
+                    alert('Error loading job card: ' + error.message);
                 }
             }
         }
 
-        // Populate form with job data
+        // Populate form with job data - IMPROVED VERSION
         function populateForm(jobData) {
-            document.getElementById('date').value = jobData.date;
-            document.getElementById('workOrderNo').value = jobData.workOrderNo;
+            console.log('Populating form with data:', jobData);
+            
+            // Basic info
+            document.getElementById('date').value = jobData.date || '';
+            document.getElementById('workOrderNo').value = jobData.workOrderNo || '';
             document.getElementById('companyName').value = jobData.companyName || '';
             document.getElementById('userName').value = jobData.userName || '';
             document.getElementById('vehicleNo').value = jobData.vehicleNo || '';
@@ -694,23 +712,35 @@ async function loadJobCardFromUrl() {
             partsBody.innerHTML = '';
             
             if (jobData.parts && jobData.parts.length > 0) {
+                console.log('Loading parts:', jobData.parts);
                 jobData.parts.forEach(part => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td><input type="text" value="${part.part}"></td>
-                        <td><input type="number" value="${part.qty}" min="1"></td>
-                        <td><input type="number" value="${part.price}" step="0.001"></td>
-                        <td><input type="text" value="${part.service}"></td>
-                        <td class="no-print">
-                            <button type="button" class="btn btn-small remove-btn">Remove</button>
-                        </td>
+                        <td><input type="text" value="${part.part || ''}" readonly></td>
+                        <td><input type="number" value="${part.qty || 1}" min="1" readonly></td>
+                        <td><input type="number" value="${part.price || 0}" step="0.001" readonly></td>
+                        <td><input type="text" value="${part.service || ''}" readonly></td>
+                        <td class="no-print"></td>
                     `;
                     partsBody.appendChild(row);
                 });
             } else {
-                // Add empty row if no parts
-                addRow();
+                console.log('No parts found, adding empty row');
+                // Add empty read-only row if no parts
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" value="" readonly></td>
+                    <td><input type="number" value="1" readonly></td>
+                    <td><input type="number" value="0" readonly></td>
+                    <td><input type="text" value="" readonly></td>
+                    <td class="no-print"></td>
+                `;
+                partsBody.appendChild(row);
             }
+
+            // Populate totals
+            document.getElementById('totalParts').textContent = jobData.totalParts || '0.000 BD';
+            document.getElementById('grandTotal').textContent = jobData.grandTotal || '0.000 BD';
 
             // Populate signatures if they exist
             if (jobData.mechanicSignature) {
@@ -723,7 +753,22 @@ async function loadJobCardFromUrl() {
                 displaySignature('manager', jobData.managerSignature);
             }
 
-            calculateTotals();
+            // Make all inputs read-only for viewers
+            makeFormReadOnly();
+
+            console.log('✅ Form populated successfully');
+        }
+
+        // Make form read-only for viewers
+        function makeFormReadOnly() {
+            const allInputs = document.querySelectorAll('input, select, textarea');
+            allInputs.forEach(input => {
+                input.readOnly = true;
+                input.style.backgroundColor = '#f5f5f5';
+            });
+            
+            // Hide action buttons
+            document.getElementById('addBtn').style.display = 'none';
         }
 
         // Show signature modal
